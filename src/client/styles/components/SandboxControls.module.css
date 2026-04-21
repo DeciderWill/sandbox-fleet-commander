@@ -22,6 +22,25 @@
   border-color: var(--border-focus);
 }
 
+.customImage {
+  font-size: 11px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  min-width: 0;
+  width: 160px;
+  font-family: var(--font-mono);
+}
+
+.customImage::placeholder {
+  color: var(--text-muted);
+}
+
+.customImage:focus {
+  border-color: var(--border-focus);
+}
+
 .btn {
   font-size: 10px;
   text-transform: uppercase;

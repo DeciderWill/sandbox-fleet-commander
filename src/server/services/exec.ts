@@ -2,19 +2,22 @@ import { getApi, getProjectId } from '../nf-client.js';
 import { setLastCommand } from './sandbox.js';
 import type { ExecResult, Language } from '../types.js';
 
+const EXEC_TIMEOUT_MS = 60_000;
+
 function toBase64(str: string): string {
   return Buffer.from(str).toString('base64');
 }
 
 function buildCommand(code: string, language: Language): string {
+  // Raw command mode — pass through directly
+  if (language === 'command') return code;
+
   const b64 = toBase64(code);
   switch (language) {
     case 'python':
       return `echo "${b64}" | base64 -d | python3`;
     case 'node':
       return `echo "${b64}" | base64 -d | node`;
-    case 'go':
-      return `echo "${b64}" | base64 -d > /tmp/main.go && go run /tmp/main.go`;
     case 'bash':
       return `echo "${b64}" | base64 -d | bash`;
     default:
@@ -31,10 +34,27 @@ export async function execCode(
   const projectId = getProjectId();
   const command = buildCommand(code, language);
 
-  const result = await (api.exec as any).execServiceCommand(
-    { projectId, serviceId },
-    { command, shell: 'sh -c' },
-  );
+  let result: any;
+  try {
+    const execPromise = (api.exec as any).execServiceCommand(
+      { projectId, serviceId },
+      { command, shell: 'sh -c' },
+    );
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(
+        () => reject(new Error(`Command timed out after ${EXEC_TIMEOUT_MS / 1000}s`)),
+        EXEC_TIMEOUT_MS,
+      ),
+    );
+    result = await Promise.race([execPromise, timeout]);
+  } catch (e: any) {
+    const msg = e?.message || e?.data?.error?.message || 'Command execution failed';
+    return {
+      exitCode: 1,
+      stdout: '',
+      stderr: `Exec error: ${msg}`,
+    };
+  }
 
   const execResult: ExecResult = {
     exitCode: result?.commandResult?.exitCode ?? 1,

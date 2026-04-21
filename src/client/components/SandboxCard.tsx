@@ -7,7 +7,7 @@ import styles from '../styles/components/SandboxCard.module.css';
 interface Props {
   sandbox: SandboxInfo;
   selected: boolean;
-  onSelect: (id: string) => void;
+  onSelect: (id: string | null) => void;
   onRefresh: () => void;
 }
 
@@ -58,7 +58,7 @@ export function SandboxCard({ sandbox, selected, onSelect, onRefresh }: Props) {
   return (
     <div
       className={`${styles.card} ${selected ? styles.selected : ''}`}
-      onClick={() => onSelect(sandbox.id)}
+      onClick={() => onSelect(selected ? null : sandbox.id)}
     >
       <div className={styles.topRow}>
         <span className={styles.name}>{sandbox.name}</span>

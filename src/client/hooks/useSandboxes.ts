@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { listSandboxes } from '../api';
 import type { SandboxInfo } from '../types';
 
-const POLL_INTERVAL = 3000;
+const POLL_INTERVAL = 1500;
 
 export function useSandboxes() {
   const [sandboxes, setSandboxes] = useState<SandboxInfo[]>([]);

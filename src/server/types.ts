@@ -1,4 +1,4 @@
-export type Language = 'python' | 'node' | 'go' | 'bash';
+export type Language = 'python' | 'node' | 'bash' | 'command';
 
 export type SandboxStatus = 'creating' | 'running' | 'paused' | 'error' | 'destroying';
 

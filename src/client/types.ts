@@ -1,4 +1,4 @@
-export type Language = 'python' | 'node' | 'go' | 'bash';
+export type Language = 'python' | 'node' | 'bash' | 'command';
 
 export type SandboxStatus = 'creating' | 'running' | 'paused' | 'error' | 'destroying';
 
@@ -23,14 +23,13 @@ export interface ExecResult {
 export const LANGUAGES: { value: Language; label: string }[] = [
   { value: 'python', label: 'Python' },
   { value: 'node', label: 'Node.js' },
-  { value: 'go', label: 'Go' },
   { value: 'bash', label: 'Bash' },
+  { value: 'command', label: 'Command' },
 ];
 
 export const IMAGES: { value: string; label: string }[] = [
   { value: 'python:3.12-slim', label: 'python:3.12-slim' },
   { value: 'node:22-slim', label: 'node:22-slim' },
-  { value: 'golang:1.22-alpine', label: 'golang:1.22-alpine' },
   { value: 'ubuntu:22.04', label: 'ubuntu:22.04' },
 ];
 
@@ -41,15 +40,8 @@ export const PLANS: { value: string; label: string }[] = [
 ];
 
 export const DEFAULT_CODE: Record<Language, string> = {
-  python: 'print("Hello from Northflank!")\n',
-  node: 'console.log("Hello from Northflank!");\n',
-  go: `package main
-
-import "fmt"
-
-func main() {
-\tfmt.Println("Hello from Northflank!")
-}
-`,
-  bash: 'echo "Hello from Northflank!"\n',
+  python: 'print("Hello from Python via the Northflank API!")\n',
+  node: 'console.log("Hello from Node.js via the Northflank API!");\n',
+  bash: 'echo "Hello from Bash via the Northflank API!"\n',
+  command: 'echo "Hello from $(uname -s) via the Northflank API!"\n',
 };

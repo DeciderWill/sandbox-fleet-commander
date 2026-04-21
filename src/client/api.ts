@@ -1,11 +1,20 @@
 import type { SandboxInfo, ExecResult, Language } from './types';
 
 async function request<T>(url: string, opts?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = {};
+  if (opts?.body != null) headers['Content-Type'] = 'application/json';
   const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
     ...opts,
+    headers: { ...headers, ...(opts?.headers as Record<string, string> | undefined) },
   });
-  const data = await res.json();
+
+  let data: any;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`Server error: ${res.status} ${res.statusText}`);
+  }
+
   if (!res.ok) throw new Error(data.error || `Request failed: ${res.status}`);
   return data as T;
 }
@@ -13,14 +22,6 @@ async function request<T>(url: string, opts?: RequestInit): Promise<T> {
 export async function listSandboxes(): Promise<SandboxInfo[]> {
   const data = await request<{ sandboxes: SandboxInfo[] }>('/api/sandboxes');
   return data.sandboxes;
-}
-
-export async function createSandbox(image: string, plan: string): Promise<SandboxInfo> {
-  const data = await request<{ sandbox: SandboxInfo }>('/api/sandboxes', {
-    method: 'POST',
-    body: JSON.stringify({ image, plan }),
-  });
-  return data.sandbox;
 }
 
 export async function destroySandbox(id: string): Promise<void> {
@@ -60,17 +61,6 @@ export async function spawnSandboxes(
   }>('/api/sandboxes/spawn', {
     method: 'POST',
     body: JSON.stringify({ count, image, plan }),
-  });
-  return data.results;
-}
-
-export async function broadcastExec(
-  code: string,
-  language: Language,
-): Promise<Record<string, ExecResult>> {
-  const data = await request<{ results: Record<string, ExecResult> }>('/api/sandboxes/broadcast', {
-    method: 'POST',
-    body: JSON.stringify({ code, language }),
   });
   return data.results;
 }

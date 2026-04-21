@@ -14,16 +14,7 @@ export async function sandboxRoutes(app: FastifyInstance): Promise<void> {
     return { sandboxes };
   });
 
-  // Create
-  app.post<{
-    Body: { image?: string; plan?: string; name?: string };
-  }>('/api/sandboxes', async (request) => {
-    const { image = 'python:3.12-slim', plan = 'nf-compute-20', name } = request.body || {};
-    const sandbox = await createSandbox({ image, plan, name });
-    return { sandbox };
-  });
-
-  // Spawn N
+  // Spawn N sandboxes (also handles single create when count=1)
   app.post<{
     Body: { count?: number; image?: string; plan?: string };
   }>('/api/sandboxes/spawn', async (request) => {

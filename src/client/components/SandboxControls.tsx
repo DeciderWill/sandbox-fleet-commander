@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createSandbox, spawnSandboxes, destroySandbox } from '../api';
+import { spawnSandboxes, destroySandbox } from '../api';
 import { IMAGES, PLANS, type SandboxInfo } from '../types';
 import styles from '../styles/components/SandboxControls.module.css';
 
@@ -10,28 +10,18 @@ interface Props {
 
 export function SandboxControls({ sandboxes, onRefresh }: Props) {
   const [image, setImage] = useState(IMAGES[0].value);
-  const [plan, setPlan] = useState(PLANS[1].value); // nf-compute-20
-  const [spawnCount, setSpawnCount] = useState(3);
-  const [creating, setCreating] = useState(false);
+  const [customImage, setCustomImage] = useState('');
+  const [plan, setPlan] = useState(PLANS[1].value);
+  const [spawnCount, setSpawnCount] = useState(1);
   const [spawning, setSpawning] = useState(false);
   const [destroyingAll, setDestroyingAll] = useState(false);
 
-  const handleCreate = async () => {
-    setCreating(true);
-    try {
-      await createSandbox(image, plan);
-      onRefresh();
-    } catch {
-      // polling picks up
-    } finally {
-      setCreating(false);
-    }
-  };
+  const effectiveImage = customImage.trim() || image;
 
   const handleSpawn = async () => {
     setSpawning(true);
     try {
-      await spawnSandboxes(spawnCount, image, plan);
+      await spawnSandboxes(spawnCount, effectiveImage, plan);
       onRefresh();
     } catch {
       // polling picks up
@@ -63,6 +53,14 @@ export function SandboxControls({ sandboxes, onRefresh }: Props) {
         ))}
       </select>
 
+      <input
+        type="text"
+        className={styles.customImage}
+        placeholder="or custom image..."
+        value={customImage}
+        onChange={(e) => setCustomImage(e.target.value)}
+      />
+
       <select className={styles.select} value={plan} onChange={(e) => setPlan(e.target.value)}>
         {PLANS.map((p) => (
           <option key={p.value} value={p.value}>
@@ -70,10 +68,6 @@ export function SandboxControls({ sandboxes, onRefresh }: Props) {
           </option>
         ))}
       </select>
-
-      <button className={styles.btn} onClick={handleCreate} disabled={creating}>
-        {creating ? '...' : 'Create'}
-      </button>
 
       <div className={styles.separator} />
 

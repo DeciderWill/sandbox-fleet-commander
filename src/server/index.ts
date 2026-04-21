@@ -8,6 +8,22 @@ import { execRoutes } from './routes/exec.js';
 
 const app = Fastify({ logger: true });
 
+// Treat an empty JSON body as `{}` instead of rejecting with 400. Some client
+// fetches (DELETE, POST without a body) send Content-Type: application/json
+// with no body, and the default parser rejects them.
+app.addContentTypeParser(
+  'application/json',
+  { parseAs: 'string' },
+  (_req, body: string, done) => {
+    if (!body) return done(null, {});
+    try {
+      done(null, JSON.parse(body));
+    } catch (err) {
+      done(err as Error, undefined);
+    }
+  },
+);
+
 await app.register(cors, { origin: true });
 
 // In production, serve the built frontend
@@ -38,13 +54,24 @@ await app.register(healthRoutes);
 await app.register(sandboxRoutes);
 await app.register(execRoutes);
 
-// Global error handler for Northflank API errors
-app.setErrorHandler(async (error: Error & { statusCode?: number }, _request, reply) => {
+// Global error handler — always returns clean JSON
+app.setErrorHandler(async (error: Error & Record<string, any>, _request, reply) => {
   app.log.error(error);
-  const status = error.statusCode || 500;
-  return reply.status(status).send({
-    error: error.message || 'Internal server error',
-  });
+
+  // Extract a usable status code
+  const status =
+    error.statusCode ||
+    error.status ||
+    error.response?.status ||
+    500;
+
+  // Extract a usable message, avoiding raw object leaks
+  const message =
+    error.message ||
+    error.data?.error?.message ||
+    'Internal server error';
+
+  return reply.status(status).send({ error: message });
 });
 
 // Start
