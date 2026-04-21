@@ -1,0 +1,28 @@
+.indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+}
+
+.creating {
+  background: var(--accent-amber);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.running {
+  background: var(--accent-green);
+}
+
+.paused {
+  background: var(--text-muted);
+}
+
+.error {
+  background: var(--accent-red);
+}
+
+.destroying {
+  background: var(--accent-amber);
+  animation: pulse 0.8s ease-in-out infinite;
+}

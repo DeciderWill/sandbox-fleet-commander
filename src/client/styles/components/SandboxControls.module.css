@@ -1,0 +1,77 @@
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+  flex-wrap: wrap;
+}
+
+.select {
+  font-size: 11px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.select:focus {
+  border-color: var(--border-focus);
+}
+
+.btn {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 150ms, background 150ms;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  border-color: var(--border-focus);
+  background: var(--bg-card);
+}
+
+.btn:active {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn.danger:hover {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+}
+
+.spawnInput {
+  width: 40px;
+  font-size: 11px;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.spawnInput:focus {
+  border-color: var(--border-focus);
+}
+
+.separator {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+}

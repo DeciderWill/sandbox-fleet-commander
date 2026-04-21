@@ -1,0 +1,114 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.select {
+  font-size: 11px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.broadcastBtn {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  padding: 5px 16px;
+  border: 1px solid var(--accent-amber);
+  color: var(--accent-amber);
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+  background: transparent;
+  margin-left: auto;
+}
+
+.broadcastBtn:hover {
+  background: var(--accent-amber);
+  color: var(--bg-primary);
+}
+
+.broadcastBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.editorWrap {
+  height: 120px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.results {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.resultRow {
+  display: flex;
+  gap: 12px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  align-items: flex-start;
+}
+
+.resultName {
+  color: var(--text-secondary);
+  min-width: 160px;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultOutput {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-all;
+  min-width: 0;
+}
+
+.resultExit {
+  flex-shrink: 0;
+  font-size: 10px;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+}
+
+.resultExit.success {
+  color: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
+.resultExit.failure {
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
+.emptyResults {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}

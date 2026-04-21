@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+
+# Reference/planning docs — not part of the app
+NORTHFLANK_REFERENCE.md
+NORTHFLANK_SKILL.md
+skill-references/
+PLAN.md
